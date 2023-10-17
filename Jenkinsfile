@@ -27,17 +27,21 @@ pipeline {
                 }    
             }
         }
-        stage('Junit .xml Files'){
-            steps{
-                echo 'Building Maven project'
-                sh 'mvn test'
-                junit 'target/surefire-reports/TEST-JenkinsDemoTest.xml'
-                junit 'target/surefire-reports/TEST-com.vcjain.calculator.OperationsTest.xml'
-            }
-        }
-        stage('JaCoCo'){
-            steps{
-                jacoco classPattern: '**/target/classes', exclusionPattern: '**/*Test*.class', execPattern: '**/target/jacoco.exec', inclusionPattern: '**/*.class', sourceExclusionPattern: 'generated/**/*.java', sourceInclusionPattern: '**/*.java'
+        stage('Paralla Junit & JaCoCo'){
+            paralla{
+                stage('Junit .xml Files'){
+                    steps{
+                        echo 'Building Maven project'
+                        sh 'mvn test'
+                        junit 'target/surefire-reports/TEST-JenkinsDemoTest.xml'
+                        junit 'target/surefire-reports/TEST-com.vcjain.calculator.OperationsTest.xml'
+                    }
+                }
+                stage('JaCoCo'){
+                    steps{
+                        jacoco classPattern: '**/target/classes', exclusionPattern: '**/*Test*.class', execPattern: '**/target/jacoco.exec', inclusionPattern: '**/*.class', sourceExclusionPattern: 'generated/**/*.java', sourceInclusionPattern: '**/*.java'
+                    }
+                }
             }
         }
     }
