@@ -22,22 +22,23 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv(installationName: 'sonarcloud', credentialsId: 'sonar-token') { 
                         sh 'mvn sonar:sonar -Dsonar.projectKey=sonardemo1 -Dsonar.organization=darlaraviteja -Dsonar.host.url=https://sonarcloud.io'
-                        sh 'sleep 50'
-                        
+                        sh 'sleep 50'                   
                     }
                 }    
             }
         }
-        stage('Test'){
+        stage('Junit .xml Files'){
             steps{
                 echo 'Building Maven project'
                 sh 'mvn test'
                 junit 'target/surefire-reports/TEST-JenkinsDemoTest.xml'
                 junit 'target/surefire-reports/TEST-com.vcjain.calculator.OperationsTest.xml'
+            }
+        }
+        stage('JaCoCo'){
+            steps{
                 jacoco classPattern: '**/target/classes', exclusionPattern: '**/*Test*.class', execPattern: '**/target/jacoco.exec', inclusionPattern: '**/*.class', sourceExclusionPattern: 'generated/**/*.java', sourceInclusionPattern: '**/*.java'
             }
         }
     }
-        
-
 }
