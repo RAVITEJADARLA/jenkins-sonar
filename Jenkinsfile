@@ -27,8 +27,8 @@ pipeline {
                 }    
             }
         }
-        stage('Paralla Junit & JaCoCo'){
-            paralla{
+        stage('Parallel Junit & JaCoCo'){
+            parallel{
                 stage('Junit .xml Files'){
                     steps{
                         echo 'Building Maven project'
